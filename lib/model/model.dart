@@ -102,4 +102,17 @@ List<FacebookUser> userInfo = [
     time: "2 Week Ago",
     Shear: "5",
   ),
+  FacebookUser(
+    name: "Bav Sophea",
+    comment: "1 Comment",
+    image: "assets/images/Post3.jpg",
+    isOnline: false,
+    like: "120K",
+    profileImage: "assets/images/Profile3.jpg",
+    status:
+        "It is a long established fact that a reader will be distracted by the readable content of a page",
+    storyImage: "assets/images/Story6.jpg",
+    time: "2 Week Ago",
+    Shear: "",
+  ),
 ];
