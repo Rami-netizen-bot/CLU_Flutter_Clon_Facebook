@@ -116,3 +116,10 @@ List<FacebookUser> userInfo = [
     Shear: "",
   ),
 ];
+
+class Product {
+  final String imgUrl;
+  final String title;
+  final String price;
+  Product({required this.imgUrl, required this.title, required this.price});
+}

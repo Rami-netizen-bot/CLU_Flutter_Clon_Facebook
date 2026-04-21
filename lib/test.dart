@@ -5,6 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:facebook_clone/theme/notification.dart';
 import 'package:facebook_clone/theme/profile.dart';
 
+void main() {
+  runApp(
+    const MaterialApp(debugShowCheckedModeBanner: false, home: FacebookPage()),
+  );
+}
+
 class FacebookPage extends StatefulWidget {
   const FacebookPage({super.key});
 
@@ -24,6 +30,7 @@ class _FacebookPageState extends State<FacebookPage> {
     _NavItem(icon: Icons.menu_rounded, label: 'Menu'),
   ];
 
+  // ── Returns the correct screen for the selected tab ──────────────────────
   Widget _getScreen(int index) {
     switch (index) {
       case 1:
@@ -43,7 +50,7 @@ class _FacebookPageState extends State<FacebookPage> {
   Future<void> _onTabTapped(int index) async {
     if (_selectIndex == index) return;
     setState(() => _isScreenLoading = true);
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
       setState(() {
         _selectIndex = index;
@@ -56,11 +63,13 @@ class _FacebookPageState extends State<FacebookPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      // ── FIXED: body now calls _getScreen() to swap between screens ───────
       body: SafeArea(
         child: _isScreenLoading
             ? const Center(child: CircularProgressIndicator())
             : _getScreen(_selectIndex),
       ),
+      // ── Bottom Navigation Bar (unchanged) ────────────────────────────────
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -118,6 +127,7 @@ class _FacebookPageState extends State<FacebookPage> {
     );
   }
 
+  // ── Home feed widget ──────────────────────────────────────────────────────
   Widget _buildHomeFeed() {
     return ListView(
       children: [
