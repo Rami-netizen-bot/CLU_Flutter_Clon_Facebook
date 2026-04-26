@@ -73,7 +73,6 @@ class _MarketplaceState extends State<Marketplace> {
           ),
         ),
         const Divider(thickness: 1),
-        // --- ADDED: TODAY'S PICKS HEADER ---
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(

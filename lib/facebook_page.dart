@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' hide Notification;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:facebook_clone/theme/notification.dart';
 import 'package:facebook_clone/theme/profile.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 
 class FacebookPage extends StatefulWidget {
   const FacebookPage({super.key});
@@ -43,7 +44,7 @@ class _FacebookPageState extends State<FacebookPage> {
   Future<void> _onTabTapped(int index) async {
     if (_selectIndex == index) return;
     setState(() => _isScreenLoading = true);
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 1000));
     if (mounted) {
       setState(() {
         _selectIndex = index;
@@ -333,8 +334,6 @@ class _FacebookPageState extends State<FacebookPage> {
     );
   }
 }
-
-// ── All helpers below are unchanged ──────────────────────────────────────────
 
 Widget userFeed(FacebookUser user) {
   return Container(
