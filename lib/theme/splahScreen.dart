@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:async';
 
+
 void main() {
   runApp(
     const MaterialApp(debugShowCheckedModeBanner: false, home: Splahscreen()),

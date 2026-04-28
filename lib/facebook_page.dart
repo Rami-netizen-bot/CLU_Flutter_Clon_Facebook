@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:facebook_clone/theme/notification.dart';
 import 'package:facebook_clone/theme/profile.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:facebook_clone/theme/themeData.dart';
 
 class FacebookPage extends StatefulWidget {
   const FacebookPage({super.key});
@@ -34,7 +35,7 @@ class _FacebookPageState extends State<FacebookPage> {
       case 3:
         return const Notification();
       case 4:
-        return const Center(child: Text('Menu'));
+        return const MenuScreen();
       case 0:
       default:
         return _buildHomeFeed();
@@ -55,8 +56,9 @@ class _FacebookPageState extends State<FacebookPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: _isScreenLoading
             ? const Center(child: CircularProgressIndicator())
@@ -64,8 +66,8 @@ class _FacebookPageState extends State<FacebookPage> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.grey[200]!, width: 1)),
+          color: theme.cardColor,
+          // border: Border(top: BorderSide(width: 1)),
         ),
         child: SafeArea(
           child: SizedBox(
