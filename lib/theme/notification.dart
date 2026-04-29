@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:facebook_clone/model/model.dart';
 
 class Notification extends StatefulWidget {
   const Notification({super.key});
@@ -11,51 +12,67 @@ class Notification extends StatefulWidget {
 class _NotificationState extends State<Notification> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Notifications',
-                style: GoogleFonts.lato(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: ListView.builder(
+                itemCount: notification.length,
+                itemBuilder: (context, idex) {
+                  return _buildNotificationTile(notification[idex]);
+                },
               ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // ScaffoldMessenger.of(
-                      //   context,
-                      // ).showSnackBar(SnackBar(content: Text('Search tapped')));
-                    },
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey[200],
-                      child: Icon(Icons.person, color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () {
-                      // ScaffoldMessenger.of(
-                      //   context,
-                      // ).showSnackBar(SnackBar(content: Text('Filter tapped')));
-                    },
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey[200],
-                      child: Icon(Icons.search, color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
+}
+
+Widget _buildHeader() {
+  return Padding(
+    padding: EdgeInsets.all(20),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Notification',
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildNotificationTile(NotificationModel model) {
+  return Container(
+    color: model.isUnread ? Colors.blue.withOpacity(0.06) : Colors.transparent,
+    child: ListTile(
+      leading: CircleAvatar(
+        radius: 30,
+        backgroundImage: AssetImage(model.profilePic),
+      ),
+      title: RichText(
+        text: TextSpan(
+          style: TextStyle(color: Colors.black, fontSize: 15),
+          children: [
+            TextSpan(
+              text: '${model.userName}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: model.content),
+          ],
+        ),
+      ),
+      subtitle: Text(
+        model.timeAgo,
+        style: TextStyle(color: model.isUnread ? Colors.blue : Colors.grey),
+      ),
+      trailing: Icon(Icons.more_horiz),
+    ),
+  );
 }

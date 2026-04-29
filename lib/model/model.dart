@@ -123,3 +123,59 @@ class Product {
   final String price;
   Product({required this.imgUrl, required this.title, required this.price});
 }
+
+class NotificationModel {
+  final String userName;
+  final String profilePic;
+  final String content;
+  final String timeAgo;
+  final bool isUnread;
+  final String? groupicon;
+
+  NotificationModel({
+    required this.userName,
+    required this.profilePic,
+    required this.content,
+    required this.timeAgo,
+    this.isUnread = false,
+    this.groupicon,
+  });
+}
+
+final List<NotificationModel> notification = [
+  NotificationModel(
+    userName: 'Luk Leanghoy',
+    profilePic: 'assets/images/Profile2.jpg',
+    content: 'Am I Back With Amazing Talent',
+    timeAgo: '3 hour',
+    isUnread: true,
+  ),
+  NotificationModel(
+    userName: 'Touch Vottey Ratana',
+    profilePic: 'assets/images/Profile2.jpg',
+    content: 'Fresh with Foresh',
+    timeAgo: '28 Minutes Ago',
+    isUnread: true,
+  ),
+  NotificationModel(
+    userName: 'Dara Vottey ',
+    profilePic: 'assets/images/Profile2.jpg',
+    content: 'Shear with Content',
+    timeAgo: '28 Minutes Ago',
+    isUnread: true,
+  ),
+  NotificationModel(
+    userName: 'Dara Vottey ',
+    profilePic: 'assets/images/Profile2.jpg',
+    content: 'Shear with Content',
+    timeAgo: '28 Minutes Ago',
+    isUnread: true,
+  ),
+  NotificationModel(
+    userName: 'Dara Vottey ',
+    profilePic: 'assets/images/Profile2.jpg',
+    content: 'Shear with Content',
+    timeAgo: '28 Minutes Ago',
+    isUnread: false,
+  ),
+];

@@ -1,60 +1,164 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
-// class MainNavigationWrapper extends StatefulWidget {
-//   const MainNavigationWrapper({super.key});
+void main() {
+  runApp(const FacebookCloneApp());
+}
 
-//   @override
-//   State<MainNavigationWrapper> createState() => _MainNavigationWrapperState();
-// }
+class FacebookCloneApp extends StatelessWidget {
+  const FacebookCloneApp({super.key});
 
-// class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
-//   int _selectedIndex = 2; // Default to Profile (the 3rd icon)
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white,
+      ),
+      home: const MainNavigationScreen(),
+    );
+  }
+}
 
-//   // This list holds the actual screens we've built
-// //   final List<Widget> _screens = [
-// //     const Center(child: Text("Home Screen")),         // Index 0
-// //     const Center(child: Text("Marketplace")),       // Index 1
-// //     const (),                             // Index 2 (Your Profile)
-// //     const Center(child: Text("Notifications")),     // Index 3
-// //     const MenuScreen(),                              // Index 4 (Your Menu)
-// //   ];
+class MainNavigationScreen extends StatefulWidget {
+  const MainNavigationScreen({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: IndexedStack(
-//         index: _selectedIndex,
-//         children: _screens,
-//       ),
-//       bottomNavigationBar: Container(
-//         decoration: BoxDecoration(
-//           border: Border(top: BorderSide(color: Colors.grey.shade300, width: 0.5)),
-//         ),
-//         child: BottomNavigationBar(
-//           currentIndex: _selectedIndex,
-//           onTap: (index) {
-//             setState(() {
-//               _selectedIndex = index;
-//             });
-//           },
-//           type: BottomNavigationBarType.fixed,
-//           selectedItemColor: const Color(0xFF1877F2), // Facebook Blue
-//           unselectedItemColor: Colors.grey,
-//           showUnselectedLabels: true,
-//           selectedLabelStyle: const TextStyle(fontSize: 12),
-//           unselectedLabelStyle: const TextStyle(fontSize: 12),
-//           items: [
-//             const BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: "Home"),
-//             const BottomNavigationBarItem(icon: Icon(Icons.storefront_outlined), activeIcon: Icon(Icons.storefront), label: "Marketplace"),
-//             const BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined), activeIcon: Icon(Icons.account_circle), label: "Profile"),
-//             const BottomNavigationBarItem(icon: Icon(Icons.notifications_none), activeIcon: Icon(Icons.notifications), label: "Notifications"),
-//             // Menu Icon (matches your screenshot image_b22997.png)
-//             const BottomNavigationBarItem(icon: Icon(Icons.menu), label: "Menu"),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  State<MainNavigationScreen> createState() => _MainNavigationScreenState();
+}
 
-//   return MaterialApp(home: Splahscreen(), debugShowCheckedModeBanner: false);
+class _MainNavigationScreenState extends State<MainNavigationScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    // 5 tabs matching your navigation bar image
+    _tabController = TabController(length: 5, vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          const Center(child: Text("Home")),
+          const Center(child: Text("Marketplace")),
+          const Center(child: Text("Profile")),
+          const NotificationScreen(), // The screen you asked for
+          const Center(child: Text("Menu")),
+        ],
+      ),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white, // Change to 0xFF18191a for Dark Mode
+            border: Border(
+              top: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
+            ),
+          ),
+          child: SafeArea(
+            child: TabBar(
+              controller: _tabController,
+              dividerColor: Colors.transparent,
+              indicator: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.blueAccent, width: 3.0),
+                ),
+              ),
+              labelColor: Colors.blueAccent,
+              unselectedLabelColor: Colors.grey,
+              indicatorSize: TabBarIndicatorSize.tab,
+              tabs: const [
+                Tab(icon: Icon(Icons.home, size: 28)),
+                Tab(icon: Icon(Icons.storefront, size: 28)),
+                Tab(icon: Icon(Icons.account_circle_outlined, size: 28)),
+                Tab(icon: Icon(Icons.notifications_none, size: 28)),
+                Tab(icon: Icon(Icons.menu, size: 28)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NotificationScreen extends StatelessWidget {
+  const NotificationScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.white,
+        centerTitle: false,
+        title: const Text(
+          "Notifications",
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          _buildCircleAction(Icons.person),
+          const SizedBox(width: 8),
+          _buildCircleAction(Icons.search),
+          const SizedBox(width: 16),
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          bool isUnread = index < 2;
+          return Container(
+            color: isUnread
+                ? Colors.blue.withOpacity(0.05)
+                : Colors.transparent,
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
+              ),
+              leading: const CircleAvatar(
+                radius: 28,
+                backgroundImage: NetworkImage('https://i.pravatar.cc/150'),
+              ),
+              title: RichText(
+                text: TextSpan(
+                  style: const TextStyle(color: Colors.black, fontSize: 14),
+                  children: [
+                    TextSpan(
+                      text: "Friend $index ",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const TextSpan(text: "reacted to your photo."),
+                  ],
+                ),
+              ),
+              subtitle: const Text("Just now"),
+              trailing: const Icon(Icons.more_horiz),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCircleAction(IconData icon) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icon, color: Colors.black, size: 22),
+    );
+  }
+}
