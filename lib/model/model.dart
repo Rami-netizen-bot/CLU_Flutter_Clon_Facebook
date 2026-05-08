@@ -118,10 +118,19 @@ List<FacebookUser> userInfo = [
 ];
 
 class Product {
-  final String imgUrl;
+  final String id;
   final String title;
-  final String price;
-  Product({required this.imgUrl, required this.title, required this.price});
+  final double price;
+  final String location;
+  final String image;
+
+  Product({
+    required this.id,
+    required this.title,
+    required this.price,
+    required this.location,
+    required this.image,
+  });
 }
 
 class NotificationModel {
@@ -144,38 +153,73 @@ class NotificationModel {
 
 final List<NotificationModel> notification = [
   NotificationModel(
-    userName: 'Luk Leanghoy',
-    profilePic: 'assets/images/Profile2.jpg',
-    content: 'Am I Back With Amazing Talent',
-    timeAgo: '3 hour',
+    userName: 'Monkey D. Luffy',
+    profilePic: 'assets/images/Luffy.jpg',
+    content: 'I’m going to be the King of the Pirates!',
+    timeAgo: '1 minute ago',
     isUnread: true,
   ),
   NotificationModel(
-    userName: 'Touch Vottey Ratana',
-    profilePic: 'assets/images/Profile2.jpg',
-    content: 'Fresh with Foresh',
-    timeAgo: '28 Minutes Ago',
+    userName: 'Kakashi Hatake',
+    profilePic: 'assets/images/Kakashi.webp',
+    content: 'Sorry I’m late, I got lost on the path of life.',
+    timeAgo: '5 minutes ago',
     isUnread: true,
   ),
   NotificationModel(
-    userName: 'Dara Vottey ',
-    profilePic: 'assets/images/Profile2.jpg',
-    content: 'Shear with Content',
-    timeAgo: '28 Minutes Ago',
+    userName: 'Zenitsu Agatsuma',
+    profilePic: 'assets/images/Zenitzu.webp',
+    content: 'PLEASE PROTECT ME! I heard a scary noise!',
+    timeAgo: '12 minutes ago',
     isUnread: true,
   ),
   NotificationModel(
-    userName: 'Dara Vottey ',
-    profilePic: 'assets/images/Profile2.jpg',
-    content: 'Shear with Content',
-    timeAgo: '28 Minutes Ago',
+    userName: 'Levi Ackerman',
+    profilePic: 'assets/images/Levi.jpg',
+    content: 'This place is filthy. Start cleaning immediately.',
+    timeAgo: '45 minutes ago',
     isUnread: true,
   ),
   NotificationModel(
-    userName: 'Dara Vottey ',
-    profilePic: 'assets/images/Profile2.jpg',
-    content: 'Shear with Content',
-    timeAgo: '28 Minutes Ago',
+    userName: 'Satoru Gojo',
+    profilePic: 'assets/images/Gojo.webp',
+    content: 'Don’t worry, I’m the strongest. ',
+    timeAgo: '1 hour ago',
+    isUnread: false,
+  ),
+  NotificationModel(
+    userName: 'Kirito',
+    profilePic: 'assets/images/Kirito.jpg',
+    content: 'Just cleared the floor boss. Anyone for a raid?',
+    timeAgo: '2 hours ago',
+    isUnread: true,
+  ),
+  NotificationModel(
+    userName: 'Nezuko Kamado',
+    profilePic: 'assets/images/Netzuko.jpg',
+    content: 'Mmph! Mmph mmph! ',
+    timeAgo: '4 hours ago',
+    isUnread: false,
+  ),
+  NotificationModel(
+    userName: 'Killua Zoldyck',
+    profilePic: 'assets/images/Killua.webp',
+    content: 'Wanna go get some chocolate robots? ',
+    timeAgo: '6 hours ago',
+    isUnread: false,
+  ),
+  NotificationModel(
+    userName: 'Erza Scarlet',
+    profilePic: 'assets/images/Erza.webp',
+    content: 'Who ate my strawberry cheesecake?! ',
+    timeAgo: 'Yesterday',
+    isUnread: false,
+  ),
+  NotificationModel(
+    userName: 'Edward Elric',
+    profilePic: 'assets/images/Edward.jpg',
+    content: 'WHO ARE YOU CALLING A SHORT PIPSQUEAK?!',
+    timeAgo: '2 days ago',
     isUnread: false,
   ),
 ];

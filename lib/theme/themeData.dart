@@ -4,16 +4,13 @@ import 'package:facebook_clone/theme/notification.dart';
 import 'package:facebook_clone/theme/profile.dart';
 import 'package:flutter/material.dart' hide Notification;
 
-// Global theme notifier - accessible throughout the app
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
-
   @override
   State<MenuScreen> createState() => _MenuScreenState();
 }
-
 class _MenuScreenState extends State<MenuScreen> {
   int _selectedIndex = 2;
 
@@ -22,7 +19,7 @@ class _MenuScreenState extends State<MenuScreen> {
       case 0:
         return const FacebookPage();
       case 1:
-        return const Marketplace();
+        // return const Marketplace();
       case 2:
         return const Profile();
       case 3:
@@ -33,7 +30,6 @@ class _MenuScreenState extends State<MenuScreen> {
         return const FacebookPage();
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -60,7 +56,6 @@ class _MenuScreenState extends State<MenuScreen> {
 
 class DarkModeScreen extends StatelessWidget {
   const DarkModeScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

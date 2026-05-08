@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -9,10 +11,25 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  // final myProfile = userProfile(
-  //   profileImageUrl = "assets/images/Profile1.jpg",
-  //   coverImageUrl = "assets/images/Cover1.jpg",
-  // );
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+  Future<void> _pickImage() async {
+    try {
+      final XFile? selectedImage = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
+      if (selectedImage == null) return;
+      setState(() {
+        _image = File(selectedImage.path);
+      });
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Could not pick image: $error')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +37,8 @@ class _ProfileState extends State<Profile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildCoverAndProfileImage(),
-            _buildProfileInfo(),
+            _buildCoverAndProfileImage(context),
+            _buildProfileInfo(context),
             _buildActionButton(),
             _buildTabSection(),
             _buildDatailScreen(),
@@ -30,111 +47,124 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-}
 
-Widget _buildCoverAndProfileImage() {
-  return Stack(
-    alignment: Alignment.topCenter,
-    clipBehavior: Clip.none,
-    children: [
-      Container(
-        height: 200,
-        width: double.infinity,
-        decoration: const BoxDecoration(color: Colors.black87),
-      ),
-      Text(
-        'Cover Photo',
-        style: GoogleFonts.lato(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+  Widget _buildCoverAndProfileImage(BuildContext context) {
+    final ImageProvider profileImage = _image == null
+        ? const AssetImage('assets/images/Profile1.jpg')
+        : FileImage(_image!);
+
+    return Stack(
+      alignment: Alignment.topCenter,
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          height: 200,
+          width: double.infinity,
+          decoration: const BoxDecoration(color: Colors.black87),
         ),
-      ),
-      Positioned(
-        top: 120,
-        child: Column(
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                CircleAvatar(
+        Text(
+          'Cover Photo',
+          style: GoogleFonts.lato(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Positioned(
+          top: 120,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              GestureDetector(
+                onTap: _pickImage,
+                child: CircleAvatar(
                   radius: 85,
                   backgroundColor: Colors.blueGrey,
                   child: CircleAvatar(
                     radius: 80,
                     backgroundColor: Colors.cyan,
-                    backgroundImage: AssetImage("assets/images/Profile1.jpg"),
+                    backgroundImage: profileImage,
                   ),
                 ),
-                Positioned(
-                  top: 5,
-                  left: -20,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
+              ),
+              Positioned(
+                top: 5,
+                left: -20,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    'Edit Profile',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
-                    child: Text('Edit Profile', style: TextStyle(fontSize: 12)),
                   ),
                 ),
-                Positioned(
-                  bottom: 6,
-                  right: 5,
+              ),
+              Positioned(
+                bottom: 6,
+                right: 5,
+                child: GestureDetector(
+                  onTap: _pickImage,
                   child: CircleAvatar(
                     radius: 15,
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: 18,
-                      color: Colors.black,
-                    ),
+                    backgroundColor: Colors.grey[200],
+                    child: const Icon(Icons.add, size: 18, color: Colors.black),
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }
 
-Widget _buildProfileInfo() {
+Widget _buildProfileInfo(BuildContext context) {
   return Padding(
-    padding: EdgeInsets.fromLTRB(16, 70, 16, 0),
+    padding: const EdgeInsets.fromLTRB(16, 70, 16, 0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Align(
-        //   alignment: Alignment.centerLeft,
-        //   child: Row(
-        //     children: [
-        //       Text('Ramy', style: TextStyle(fontSize: 28)),
-        //     ],
-        //   ),
-        // ),
         Row(
           children: [
-            Text(
+            const Text(
               'Ramy',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
             Text(
               '...',
-              style: TextStyle(fontSize: 28, color: Colors.grey[700]),
+              style: TextStyle(
+                fontSize: 28,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
             ),
           ],
         ),
-        SizedBox(height: 7),
+        const SizedBox(height: 7),
         Text(
           '948 friends',
-          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+          style: TextStyle(
+            fontSize: 16,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+          ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Text(
           'You become what do you think',
-          style: TextStyle(fontSize: 16, color: Colors.black),
+          style: TextStyle(
+            fontSize: 16,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+          ),
         ),
       ],
     ),
@@ -146,10 +176,9 @@ Widget _buildActionButton() {
     padding: const EdgeInsets.all(16),
     child: Column(
       children: [
-        // Primary Blue Button
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1877F2), // Accurate FB Blue
+            backgroundColor: const Color(0xFF1877F2),
             elevation: 0,
             minimumSize: const Size(double.infinity, 45),
             shape: RoundedRectangleBorder(
@@ -157,44 +186,43 @@ Widget _buildActionButton() {
             ),
           ),
           onPressed: () {
-            print("Add to Story");
+            print('Add to Story');
           },
           label: const Text(
-            "Add to Story",
+            'Add to Story',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           icon: const Icon(Icons.add_circle, color: Colors.white),
         ),
-
         const SizedBox(height: 10),
         Row(
           children: [
             Expanded(
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE4E6EB), // Accurate FB Grey
+                  backgroundColor: const Color(0xFFE4E6EB),
                   elevation: 0,
                   minimumSize: const Size(0, 45),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () => print("Edit Profile"),
-                label: Text(
+                onPressed: () => print('Edit Profile'),
+                label: const Text(
                   'Edit Profile',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                icon: Icon(Icons.edit, size: 18),
+                icon: const Icon(Icons.edit, size: 18),
               ),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             GestureDetector(
-              onTap: () => print("Menu Tapped"),
+              onTap: () => print('Menu Tapped'),
               child: Container(
                 height: 45,
-                width: 55, // Slightly wider for better visual balance
+                width: 55,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE4E6EB), // Accurate FB Grey
+                  color: const Color(0xFFE4E6EB),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.more_horiz, color: Colors.black),
@@ -209,8 +237,8 @@ Widget _buildActionButton() {
 
 Widget _profileTab(String label, {bool isActive = false}) {
   return Container(
-    margin: EdgeInsets.only(right: 20),
-    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    margin: const EdgeInsets.only(right: 20),
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     decoration: BoxDecoration(
       color: isActive ? Colors.blue[700] : Colors.transparent,
       borderRadius: BorderRadius.circular(20),
@@ -231,9 +259,9 @@ Widget _buildTabSection() {
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
     child: Row(
       children: [
-        _profileTab("Posts", isActive: false),
-        _profileTab("Photos"),
-        _profileTab("Reels"),
+        _profileTab('Posts'),
+        _profileTab('Photos'),
+        _profileTab('Reels'),
       ],
     ),
   );
@@ -241,16 +269,16 @@ Widget _buildTabSection() {
 
 Widget _buildDatailScreen() {
   return Padding(
-    padding: EdgeInsets.all(16),
+    padding: const EdgeInsets.all(16),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Detail Screen',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 12),
-        _detailRow(Icons.link, "Thavrin"),
+        const SizedBox(height: 12),
+        _detailRow(Icons.link, 'Thavrin'),
         _detailRow(Icons.school, 'Chenna University'),
       ],
     ),
@@ -259,12 +287,12 @@ Widget _buildDatailScreen() {
 
 Widget _detailRow(IconData icon, String text) {
   return Padding(
-    padding: EdgeInsets.only(bottom: 12),
+    padding: const EdgeInsets.only(bottom: 12),
     child: Row(
       children: [
         Icon(icon, color: Colors.grey[600]),
-        SizedBox(width: 12),
-        Expanded(child: Text(text, style: TextStyle(fontSize: 16))),
+        const SizedBox(width: 12),
+        Expanded(child: Text(text, style: const TextStyle(fontSize: 16))),
       ],
     ),
   );

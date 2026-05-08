@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:facebook_clone/model/model.dart';
 
 class Notification extends StatefulWidget {
@@ -13,7 +13,7 @@ class _NotificationState extends State<Notification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -22,7 +22,7 @@ class _NotificationState extends State<Notification> {
               child: ListView.builder(
                 itemCount: notification.length,
                 itemBuilder: (context, idex) {
-                  return _buildNotificationTile(notification[idex]);
+                  return _buildNotificationTile(notification[idex], context);
                 },
               ),
             ),
@@ -48,7 +48,9 @@ Widget _buildHeader() {
   );
 }
 
-Widget _buildNotificationTile(NotificationModel model) {
+Widget _buildNotificationTile(NotificationModel model, BuildContext context) {
+  final theme = Theme.of(context);
+  final isDark = theme.brightness == Brightness.dark;
   return Container(
     color: model.isUnread ? Colors.blue.withOpacity(0.06) : Colors.transparent,
     child: ListTile(
@@ -62,9 +64,17 @@ Widget _buildNotificationTile(NotificationModel model) {
           children: [
             TextSpan(
               text: '${model.userName}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
             ),
-            TextSpan(text: model.content),
+            TextSpan(
+              text: model.content,
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
           ],
         ),
       ),

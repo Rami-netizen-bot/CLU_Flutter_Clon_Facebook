@@ -1,10 +1,11 @@
 import 'package:facebook_clone/model/model.dart';
+import 'package:facebook_clone/screens/home_page.dart';
 import 'package:facebook_clone/theme/marketplace.dart';
 import 'package:flutter/material.dart' hide Notification;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:facebook_clone/theme/notification.dart';
 import 'package:facebook_clone/theme/profile.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+// import 'package:flutter_translate/flutter_translate.dart';
 import 'package:facebook_clone/theme/themeData.dart';
 
 class FacebookPage extends StatefulWidget {
@@ -17,6 +18,9 @@ class FacebookPage extends StatefulWidget {
 class _FacebookPageState extends State<FacebookPage> {
   int _selectIndex = 0;
   bool _isScreenLoading = false;
+  bool _isSearching = false;
+  int _navigationRequestId = 0;
+  final TextEditingController _searchController = TextEditingController();
 
   final List<_NavItem> _items = [
     _NavItem(icon: Icons.home_rounded, label: 'Home'),
@@ -43,20 +47,30 @@ class _FacebookPageState extends State<FacebookPage> {
   }
 
   Future<void> _onTabTapped(int index) async {
-    if (_selectIndex == index) return;
-    setState(() => _isScreenLoading = true);
-    await Future.delayed(const Duration(milliseconds: 1000));
-    if (mounted) {
-      setState(() {
-        _selectIndex = index;
-        _isScreenLoading = false;
-      });
-    }
+    if (_selectIndex == index)
+      return; //Prevents the function from running if the user clicks the tab they are already on.
+    final requestId = ++_navigationRequestId;
+    setState(() {
+      _selectIndex = index;
+      _isScreenLoading = true;
+    });
+
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted || requestId != _navigationRequestId) return;
+
+    setState(() => _isScreenLoading = false);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
@@ -129,34 +143,69 @@ class _FacebookPageState extends State<FacebookPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Facebook',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey[200],
-                      child: SvgPicture.asset(
-                        'assets/icons/search-svgrepo-com.svg',
-                        width: 22,
-                        height: 22,
-                        colorFilter: const ColorFilter.mode(
-                          Colors.black,
-                          BlendMode.srcIn,
-                        ),
+              if (_isSearching)
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      hintText: 'Search Facebook',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          setState(() {
+                            _searchController.clear();
+                            _isSearching = false;
+                          });
+                        },
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                )
+              else
+                const Text(
+                  'Facebook',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              if (_isSearching) const SizedBox(width: 8),
+              Row(
+                children: [
+                  if (!_isSearching)
+                    GestureDetector(
+                      onTap: () => setState(() => _isSearching = true),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.grey[200],
+                        child: SvgPicture.asset(
+                          'assets/icons/search-svgrepo-com.svg',
+                          width: 22,
+                          height: 22,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.black,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (!_isSearching) const SizedBox(width: 8),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ChatScreen()),
+                      );
+                    },
                     child: CircleAvatar(
                       backgroundColor: Colors.grey[200],
                       child: SvgPicture.asset(
@@ -175,43 +224,43 @@ class _FacebookPageState extends State<FacebookPage> {
             ],
           ),
         ),
-        Column(
-          children: [
-            Divider(thickness: 1, color: Colors.grey[200]),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Row(
-                  children: [
-                    _actionButton(
-                      icon: Icons.video_call_rounded,
-                      label: 'Reel',
-                      color: Colors.red,
-                    ),
-                    _actionButton(
-                      icon: Icons.video_camera_front_rounded,
-                      label: 'Room',
-                      color: Colors.purple,
-                    ),
-                    _actionButton(
-                      icon: Icons.group_add_rounded,
-                      label: 'Group',
-                      color: Colors.blue,
-                    ),
-                    _actionButton(
-                      icon: Icons.live_tv_rounded,
-                      label: 'Live',
-                      color: Colors.red,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Divider(thickness: 1, color: Colors.grey[200]),
-          ],
-        ),
+        // Column(
+        //   children: [
+        //     Divider(thickness: 1, color: Colors.grey[200]),
+        //     Padding(
+        //       padding: const EdgeInsets.symmetric(vertical: 6),
+        //       child: SingleChildScrollView(
+        //         scrollDirection: Axis.horizontal,
+        //         padding: const EdgeInsets.symmetric(horizontal: 12),
+        //         child: Row(
+        //           children: [
+        //             _actionButton(
+        //               icon: Icons.video_call_rounded,
+        //               label: 'Reel',
+        //               color: Colors.red,
+        //             ),
+        //             _actionButton(
+        //               icon: Icons.video_camera_front_rounded,
+        //               label: 'Room',
+        //               color: Colors.purple,
+        //             ),
+        //             _actionButton(
+        //               icon: Icons.group_add_rounded,
+        //               label: 'Group',
+        //               color: Colors.blue,
+        //             ),
+        //             _actionButton(
+        //               icon: Icons.live_tv_rounded,
+        //               label: 'Live',
+        //               color: Colors.red,
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //     Divider(thickness: 1, color: Colors.grey[200]),
+        //   ],
+        // ),
         Container(
           height: 100,
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -328,7 +377,7 @@ class _FacebookPageState extends State<FacebookPage> {
                 ),
               ),
               const SizedBox(height: 40),
-              for (FacebookUser user in userInfo) userFeed(user),
+              for (FacebookUser user in userInfo) userFeed(user, context),
             ],
           ),
         ),
@@ -337,7 +386,7 @@ class _FacebookPageState extends State<FacebookPage> {
   }
 }
 
-Widget userFeed(FacebookUser user) {
+Widget userFeed(FacebookUser user, BuildContext context) {
   return Container(
     margin: const EdgeInsets.only(bottom: 20, right: 20),
     child: Column(
@@ -383,10 +432,10 @@ Widget userFeed(FacebookUser user) {
             ),
             IconButton(
               onPressed: () {},
-              icon: const Icon(
+              icon: Icon(
                 Icons.more_horiz,
                 size: 30,
-                color: Colors.black45,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
           ],
@@ -394,7 +443,10 @@ Widget userFeed(FacebookUser user) {
         const SizedBox(height: 10),
         Text(
           user.status,
-          style: const TextStyle(fontSize: 15, color: Colors.black87),
+          style: TextStyle(
+            fontSize: 15,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+          ),
         ),
         const SizedBox(height: 10),
         if (user.image.isNotEmpty)

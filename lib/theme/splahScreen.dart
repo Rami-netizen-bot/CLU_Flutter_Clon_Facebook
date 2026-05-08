@@ -4,13 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:async';
 
-
-void main() {
-  runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: Splahscreen()),
-  );
-}
-
 class Splahscreen extends StatefulWidget {
   const Splahscreen({super.key});
 
@@ -19,13 +12,17 @@ class Splahscreen extends StatefulWidget {
 }
 
 class _SplahscreenState extends State<Splahscreen> {
+  //This code is used to create a Splash Screen in Flutter. It is the introductory screen that appears when an app is launched, typically showing a brand logo.
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => FacebookPage()),
+        MaterialPageRoute(
+          builder: (context) => FacebookPage(),
+        ), // use future.delayed to 3seconrd to navigator FacebookPage
       );
     });
   }
@@ -56,7 +53,7 @@ class _SplahscreenState extends State<Splahscreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Facebook',
+                      'From',
                       style: TextStyle(
                         color: Colors.blueGrey[300],
                         fontSize: 16,
@@ -68,13 +65,17 @@ class _SplahscreenState extends State<Splahscreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildSmallIcon(Icons.facebook),
-                        SizedBox(width: 15),
-                        _buildSmallIcon(Icons.messenger_outline),
-                        SizedBox(width: 15),
-                        _buildSmallIcon(Icons.camera_alt_outlined),
-                        SizedBox(width: 15),
-                        _buildSmallIcon(Icons.all_inclusive),
+                        _buildSmallIcon(Icons.facebook_outlined),
+                        SizedBox(width: 8),
+                        Text(
+                          'Facebook',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                            fontSize: 18,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -88,6 +89,6 @@ class _SplahscreenState extends State<Splahscreen> {
   }
 
   Widget _buildSmallIcon(IconData icon) {
-    return Icon(icon, color: Colors.grey, size: 20);
+    return Icon(icon, color: Colors.blue, size: 25);
   }
 }
